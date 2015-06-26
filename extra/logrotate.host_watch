@@ -1,0 +1,9 @@
+/var/logs/host_watch.log {
+    daily
+    rotate 4
+    missingok
+    compress
+    delaycompress
+    notifempty
+    copytruncate
+}
