@@ -13,6 +13,7 @@ from subprocess import Popen, PIPE
 
 from celery import Celery
 from celery.events.snapshot import Polaroid
+from shapeshift import JSONFormatter
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'atmosphere.settings')
 sys.path.append("/opt/dev/atmosphere")
@@ -34,40 +35,6 @@ DEFAULT_MESSAGE_RATE = 60
 ConnectionInfo = namedtuple("ConnectionInfo", ["listening", "establish_wait"])
 ActiveInfo = namedtuple("ActiveInfo", ["active_workers", "idle_workers", "active_tasks"])
 ReservedInfo = namedtuple("ReservedInfo", ["reserved_tasks", "queued_tasks"])
-
-
-class JSONFormatter(logging.Formatter):
-    ignore_list = (
-        'args', 'asctime', 'created', 'exc_info', 'exc_text', 'filename',
-        'funcName', 'id', 'levelname', 'levelno', 'lineno', 'module',
-        'msecs', 'msecs', 'message', 'msg', 'name', 'pathname', 'process',
-        'processName', 'relativeCreated', 'thread', 'threadName', 'extra')
-
-    def get_extra_fields(self, record):
-        fields = {}
-
-        for key, value in record.__dict__.items():
-            if key not in self.ignore_list:
-                fields[key] = repr(value)
-
-        return fields
-
-    def create_timestamp(cls, time):
-        timestamp = datetime.utcfromtimestamp(time)
-        return (timestamp.strftime("%Y-%m-%dT%H:%M:%S")
-                + ".%03d" % (timestamp.microsecond / 1000)
-                + "Z")
-
-    def format(self, record):
-        entry = {
-            "@timestamp": self.create_timestamp(record.created),
-            "message": super(JSONFormatter, self).format(record)
-        }
-
-        fields = self.get_extra_fields(record)
-        entry.update(fields)
-
-        return json.dumps(entry)
 
 
 def log_celery_info(active, reserved, connections, error=None):
