@@ -27,7 +27,7 @@ try:
 except ImportError:
     raise "Requires python-logstash to be installed"
 
-logger = logging.getLogger("host_watch")
+logger = logging.getLogger(__name__)
 
 DEFAULT_LOGSTASH_PORT = 5002
 DEFAULT_MESSAGE_RATE = 60
