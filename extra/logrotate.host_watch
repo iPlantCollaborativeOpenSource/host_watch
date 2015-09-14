@@ -1,4 +1,4 @@
-/var/logs/host_watch.log {
+/var/log/host_watch.log {
     daily
     rotate 4
     missingok
