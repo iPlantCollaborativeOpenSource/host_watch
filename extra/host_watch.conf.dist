@@ -1,0 +1,7 @@
+[program:host_watch]
+command=/opt/env/atmo/bin/python host_watch.py lumberjack.iplantc.org --rate=60 --log-to=/var/log/host_watch.log
+directory=/opt/dev/host_watch
+autostart=True
+autorestart=True
+stderr_logfile=/var/log/host-watch.err.log
+stdout_logfile=/var/log/host-watch.out.log
